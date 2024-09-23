@@ -1,0 +1,98 @@
+animals/animals.go
+package animals
+
+import "fmt"
+
+// Animal интерфейс для животных
+type Animal interface {
+    Sound() string
+}
+
+// Dog структура для собаки
+type Dog struct{}
+
+// Cat структура для кошки
+type Cat struct{}
+
+// Sound метод для собаки
+func (d Dog) Sound() string {
+    return "Woof!"
+}
+
+// Sound метод для кошки
+func (c Cat) Sound() string {
+    return "Meow!"
+}
+
+handlers/handlers.go
+package handlers
+
+import (
+    "errors"
+    "myproject/animals"
+    "myproject/utils"
+)
+
+// MakeSound вызывает метод Sound для животного и обрабатывает ошибки
+func MakeSound(animal animals.Animal) error {
+    if animal == nil {
+        return errors.New("animal is nil")
+    }
+    sound := animal.Sound()
+    utils.PrintSound(sound)
+    return nil
+}
+
+utils/utils.go
+package utils
+
+import (
+    "fmt"
+    "github.com/sirupsen/logrus"
+)
+
+// PrintSound выводит звук животного
+func PrintSound(sound string) {
+    fmt.Println("Animal sound:", sound)
+}
+
+// LogError логирует ошибку
+func LogError(err error) {
+    logrus.Error(err)
+}
+
+main.go
+package main
+
+import (
+    "myproject/animals"
+    "myproject/handlers"
+    "myproject/utils"
+    "github.com/sirupsen/logrus"
+)
+
+func main() {
+    // Инициализация логгера
+    logrus.SetLevel(logrus.DebugLevel)
+
+    // Создание объектов животных
+    dog := animals.Dog{}
+    cat := animals.Cat{}
+
+    // Вызов методов Sound и обработка ошибок
+    if err := handlers.MakeSound(dog); err != nil {
+        utils.LogError(err)
+    }
+
+    if err := handlers.MakeSound(cat); err != nil {
+        utils.LogError(err)
+    }
+
+    // Пример обработки ошибки для nil объекта
+    var nilAnimal animals.Animal
+    if err := handlers.MakeSound(nilAnimal); err != nil {
+        utils.LogError(err)
+    }
+}
+
+
