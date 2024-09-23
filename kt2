@@ -1,0 +1,89 @@
+package main
+
+import (
+	"bufio"
+	"fmt"
+	"log"
+	"os"
+	"strings"
+)
+
+// Интерфейс Animal
+type Animal interface {
+	Sound() (string, error)
+}
+
+// Структура Dog
+type Dog struct{}
+
+func (d Dog) Sound() (string, error) {
+	return "Woof!", nil
+}
+
+// Структура Cat
+type Cat struct{}
+
+func (c Cat) Sound() (string, error) {
+	return "Meow!", nil
+}
+
+// Структура UnknownAnimal
+type UnknownAnimal struct{}
+
+func (u UnknownAnimal) Sound() (string, error) {
+	return "", fmt.Errorf("unknown animal sound")
+}
+
+// Функция для вывода звука животного
+func printAnimalSound(a Animal) {
+	sound, err := a.Sound()
+	if err != nil {
+		log.Printf("Error: %v", err)
+		return
+	}
+	fmt.Println("Animal sound:", sound)
+}
+
+// Функция для выбора типа животного
+func chooseAnimal() (Animal, error) {
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Print("Choose an animal (dog, cat, unknown): ")
+	input, err := reader.ReadString('\n')
+	if err != nil {
+		return nil, fmt.Errorf("error reading input: %v", err)
+	}
+
+	input = strings.TrimSpace(input)
+	switch input {
+	case "dog":
+		return Dog{}, nil
+	case "cat":
+		return Cat{}, nil
+	case "unknown":
+		return UnknownAnimal{}, nil
+	default:
+		return nil, fmt.Errorf("unknown animal type: %s", input)
+	}
+}
+
+func main() {
+	// Настройка логгера для записи в файл
+	logFile, err := os.OpenFile("error.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		log.Fatalf("Error opening log file: %v", err)
+	}
+	defer logFile.Close()
+
+	log.SetOutput(logFile)
+
+	// Выбор типа животного
+	animal, err := chooseAnimal()
+	if err != nil {
+		log.Printf("Error: %v", err)
+		fmt.Println("Invalid input. Please try again.")
+		return
+	}
+
+	// Вывод звука животного
+	printAnimalSound(animal)
+}
