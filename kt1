@@ -1,0 +1,169 @@
+package main
+
+import "fmt"
+
+// Интерфейс Animal
+type Animal interface {
+	MakeSound() string
+	Move() string
+	Eat() string
+	Sleep() string
+}
+
+// Интерфейс Swimmer
+type Swimmer interface {
+	Swim() string
+}
+
+// Структура для Льва
+type Lion struct{}
+
+func (l Lion) MakeSound() string {
+	return "Roar!"
+}
+
+func (l Lion) Move() string {
+	return "Lion is running."
+}
+
+func (l Lion) Eat() string {
+	return "Lion is eating meat."
+}
+
+func (l Lion) Sleep() string {
+	return "Lion is sleeping."
+}
+
+func (l Lion) Hunt() string {
+	return "Lion is hunting."
+}
+
+// Структура для Слона
+type Elephant struct{}
+
+func (e Elephant) MakeSound() string {
+	return "Trumpet!"
+}
+
+func (e Elephant) Move() string {
+	return "Elephant is walking."
+}
+
+func (e Elephant) Eat() string {
+	return "Elephant is eating leaves."
+}
+
+func (e Elephant) Sleep() string {
+	return "Elephant is sleeping."
+}
+
+func (e Elephant) SprayWater() string {
+	return "Elephant is spraying water."
+}
+
+// Структура для Птицы
+type Bird struct{}
+
+func (b Bird) MakeSound() string {
+	return "Chirp!"
+}
+
+func (b Bird) Move() string {
+	return "Bird is flying."
+}
+
+func (b Bird) Eat() string {
+	return "Bird is eating seeds."
+}
+
+func (b Bird) Sleep() string {
+	return "Bird is sleeping."
+}
+
+func (b Bird) BuildNest() string {
+	return "Bird is building a nest."
+}
+
+// Структура для Рыбы
+type Fish struct{}
+
+func (f Fish) MakeSound() string {
+	return "Blub!"
+}
+
+func (f Fish) Move() string {
+	return "Fish is swimming."
+}
+
+func (f Fish) Eat() string {
+	return "Fish is eating plankton."
+}
+
+func (f Fish) Sleep() string {
+	return "Fish is resting."
+}
+
+func (f Fish) Swim() string {
+	return "Fish is swimming."
+}
+
+// Структура для Пингвина
+type Penguin struct{}
+
+func (p Penguin) MakeSound() string {
+	return "Honk!"
+}
+
+func (p Penguin) Move() string {
+	return "Penguin is waddling."
+}
+
+func (p Penguin) Eat() string {
+	return "Penguin is eating fish."
+}
+
+func (p Penguin) Sleep() string {
+	return "Penguin is sleeping."
+}
+
+func (p Penguin) Swim() string {
+	return "Penguin is swimming."
+}
+
+func (p Penguin) Slide() string {
+	return "Penguin is sliding on ice."
+}
+
+// Функция для проверки, умеет ли животное плавать
+func CanSwim(a Animal) bool {
+	_, ok := a.(Swimmer)
+	return ok
+}
+
+func main() {
+	animals := []Animal{Lion{}, Elephant{}, Bird{}, Fish{}, Penguin{}}
+
+	for _, animal := range animals {
+		fmt.Println(animal.MakeSound())
+		fmt.Println(animal.Move())
+		fmt.Println(animal.Eat())
+		fmt.Println(animal.Sleep())
+
+		if CanSwim(animal) {
+			fmt.Println(animal.(Swimmer).Swim())
+		}
+
+		switch animal.(type) {
+		case Lion:
+			fmt.Println(animal.(Lion).Hunt())
+		case Elephant:
+			fmt.Println(animal.(Elephant).SprayWater())
+		case Bird:
+			fmt.Println(animal.(Bird).BuildNest())
+		case Penguin:
+			fmt.Println(animal.(Penguin).Slide())
+		}
+
+		fmt.Println("---")
+	}
+}
